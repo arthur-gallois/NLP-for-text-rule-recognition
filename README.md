@@ -4,3 +4,4 @@ Le but de ce projet est de détecter des "règles" dans un texte écrit en Angla
 
 Le projet est programmé en python
 
+test de push sur la branch Eliott
