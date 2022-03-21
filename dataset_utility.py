@@ -51,7 +51,7 @@ def wordLoader(documentWord):
     k = len(doc.paragraphs)
     word_text = ""
     for para in doc.paragraphs:
-        word_text.append(para.text)
+        word_text += para.text
 
     text = Text(word_text)
 
@@ -62,15 +62,15 @@ def wordLoader(documentWord):
         consequence = ""
         action = ""
         for run in para.runs:
-            if run.underlines:
+            if run.underline:
                 rule += run.text
-            if run.bolds and not run.italics:
+            if run.bold and not run.italic:
                 condition += run.text
-            if run.italics and not run.bolds:
+            if run.italic and not run.bold:
                 consequence += run.text
-            if run.bolds and run.italics:
-                action += ""
-            if not run.underlines and rule != "":
+            if run.bold and run.italic:
+                action += run.text
+            if not run.underline and rule != "":
                 rules.append(Rule(rule, condition, consequence, action))
                 rule = ""
                 condition = ""
