@@ -1,5 +1,14 @@
 import docx
-
+L=[]
 doc = docx.Document("test_doc.docx")
-result = [p.text for p in doc.paragraphs]
-#print(result)
+
+bolds=[]
+italics=[]
+for para in doc.paragraphs:
+    for run in para.runs:
+        if run.italic :
+            italics.append(run.text)
+        if run.bold :
+            bolds.append(run.text)
+            
+print(bolds, italics)
