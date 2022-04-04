@@ -1,5 +1,7 @@
+import os
 import json
 import docx
+import sys
 
 
 class Text:
@@ -47,7 +49,7 @@ def parse(input_json):
 
 def wordLoader(documentWord):
     # documentWord est le chemin du docx (au format str)
-    doc = docx.Document("word.docx")
+    doc = docx.Document(documentWord)
     k = len(doc.paragraphs)
     word_text = ""
     for para in doc.paragraphs:
@@ -86,4 +88,16 @@ def wordLoader(documentWord):
     return text
 
 
-print(wordLoader("word.docx"))
+def saveJson(json_name, json_text):
+    path = os.path.dirname(os.path.abspath(__file__))
+    with open(f"{path}/dataset/json/{json_name}.json", 'w') as file:
+        file.write(json_text)
+
+
+if __name__ == '__main__':
+    if(len(sys.argv) < 2):
+        print("Veuillez spécifier le nom du word")
+    else:
+        path = os.path.dirname(os.path.abspath(__file__))
+        json_text = wordLoader(f"{path}/dataset/docx/{sys.argv[1]}.docx")
+        saveJson(sys.argv[1], json_text.stringify())
