@@ -1,3 +1,5 @@
+from distutils.command.config import config
+from itertools import tee
 import os
 import json
 import docx
@@ -12,7 +14,8 @@ class Text:
         self.text = text
 
     def __repr__(self):
-        return '{' + f'"text" : "{self.text}","rules" : {self.rules}' + '}'
+        text = self.text.replace('"', '\\"')
+        return '{' + f'"text" : "{text}","rules" : {self.rules}' + '}'
 
     def stringify(self):
         return self.__repr__()
@@ -31,7 +34,12 @@ class Rule:
         self.action = action
 
     def __repr__(self):
-        return '{' + f'"text" : "{self.text}", "condition" : "{self.condition}", "consequence" : "{self.consequence}","action" : "{self.action}"' + '}'
+        text = self.text.replace('"', '\\"')
+        condition = self.condition.replace('"', '\\"')
+        consequence = self.consequence.replace('"', '\\"')
+        action = self.action.replace('"', '\\"')
+
+        return '{' + f'"text" : "{text}", "condition" : "{condition}", "consequence" : "{consequence}","action" : "{action}"' + '}'
 
 
 def parse(input_json):
@@ -54,7 +62,6 @@ def wordLoader(documentWord):
     word_text = ""
     for para in doc.paragraphs:
         word_text += para.text
-
     text = Text(word_text)
 
     rules = []
@@ -90,7 +97,7 @@ def wordLoader(documentWord):
 
 def saveJson(json_name, json_text):
     path = os.path.dirname(os.path.abspath(__file__))
-    with open(f"{path}/dataset/json/{json_name}.json", 'w') as file:
+    with open(f"{path}/dataset/json/{json_name}.json", 'w', encoding='utf8') as file:
         file.write(json_text)
 
 
