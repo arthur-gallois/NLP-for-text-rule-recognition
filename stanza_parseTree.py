@@ -213,7 +213,7 @@ def identify_consequence(sentence, cause):
 
 
 def test_identify_consequence():
-    sentence = s12
+    sentence = s9
     print("\n"+"sentence :", sentence)
     cause = rebuild(identify_cause(sentence))
     print("\n" + "cause :", cause)
