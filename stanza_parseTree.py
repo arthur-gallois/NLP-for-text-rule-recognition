@@ -1,4 +1,5 @@
 import stanza
+#from dataset_utility import *
 
 # stanza.download('en')
 nlp = stanza.Pipeline('en')
@@ -69,6 +70,8 @@ def test_extract_all():
 
 
 def rebuild(l):
+    if l == None:
+        return None
     sentence = str(l[0])
     contraction = ["n’t", "n't", ","]
     not_okay = [".", "?", "!", "(", ")", ",", "-", "/", " "]
@@ -100,7 +103,7 @@ def test_rebuild():
 
 def sbar_test(tree):
     words = ["unless", "Unless", "If", "if", "when",
-             "When", "After", "after", "because", "Because", "Since", "since", "provided", "Provided", "that", "That", "while", "While", "as"]
+             "When", "After", "after", "because", "Because", "Since", "since", "provided", "Provided", "that", "That", "while", "While", "as", "before", "Before", "only", "Only"]
     text = extract_all(tree)
     for word in text:
         if word in words:
@@ -109,7 +112,7 @@ def sbar_test(tree):
 
 
 def pp_test(tree):
-    words = ["After", "after"]
+    words = ["After", "after", "before", "Before"]
     text = extract_all(tree)
     for word in text:
         if word in words:
@@ -180,24 +183,23 @@ def delete_sequence(sentence, sequence):
     """
     Suprime une séquence de mots dans une phrase, longueur de la séquence plus petite que la phrase, la séquence est nécessairement dans la phrase
     """
+    if sequence == None:
+        return sentence
     n = len(sequence)
     m = len(sentence)
     for i in range(m):
-        if i+n < m and sentence[i:i+n] == sequence:
+        if i+n <= m and sentence[i:i+n] == sequence:
             return sentence[0:i]+sentence[i+n:m]
     return sentence
 
 
 def test_delete_sequence():
     sentence = delete_sequence(
-        "J'ai vu quelqu'un derrière l'arbre", "quelqu'un")
+        "Do not operate the microwave oven if it has a damaged cord or plug, if it is not working properly, or if it has been damaged or dropped", "if it is not working properly, or if it has been damaged or dropped")
     print(sentence)
-    j = nlp(sentence)
-    for s in j.sentences:
-        print(s.constituency)
 
 
-# test_delete_sequence()
+test_delete_sequence()
 
 
 def identify_consequence(sentence, cause):
@@ -260,8 +262,7 @@ def test_dic_consequence(doc):
 
 
 def cause_consequence(sentence):
-    print("\n"+"sentence :", sentence)
     cause = rebuild(identify_cause(sentence))
-    print("\n" + "cause :", cause)
+    print("cause :", cause)
     consequence = rebuild(identify_consequence(sentence, cause))
-    print("\n" + "consequence : ", consequence)
+    print("consequence :", consequence)
