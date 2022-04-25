@@ -1,4 +1,5 @@
 import stanza
+
 # stanza.download('en')
 nlp = stanza.Pipeline('en')
 
@@ -92,7 +93,9 @@ def test_rebuild():
 
 # test_rebuild()
 
+##
 # IDENTIFICATION CAUSE
+##
 
 
 def sbar_test(tree):
@@ -169,7 +172,9 @@ def test_sentence(sentence):
 
 # Forme exploitable de conséquences
 
-# IDENTIFICATION CONSEQUENCES (MD ?)
+#
+# IDENTIFICATION CONSEQUENCES
+#
 
 def delete_sequence(sentence, sequence):
     """
@@ -221,7 +226,7 @@ def test_identify_consequence():
     print("\n" + "consequence : ", consequence)
 
 
-test_identify_consequence()
+# test_identify_consequence()
 
 
 def dic_consequences(tree):
@@ -248,3 +253,15 @@ def test_dic_consequence(doc):
     for s in doc.sentences:
         p = s.constituency
         print(dic_consequences(p))
+
+#
+# ALGO FINAL
+#
+
+
+def cause_consequence(sentence):
+    print("\n"+"sentence :", sentence)
+    cause = rebuild(identify_cause(sentence))
+    print("\n" + "cause :", cause)
+    consequence = rebuild(identify_consequence(sentence, cause))
+    print("\n" + "consequence : ", consequence)
