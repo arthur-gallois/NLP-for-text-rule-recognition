@@ -1,4 +1,5 @@
 import re 
+import nltk
 
 def sentencify(text):
     '''
@@ -24,11 +25,8 @@ def wordify(sentence):
     Entree : Une phrase (string).
     Sortie : liste des mots constitutifs de la phrase (list of string).
     '''
-    liste_mots = re.split(r"\ ",sentence)
-    for k in range(len(liste_mots)-1):
-        if liste_mots[k][-1] in [",", ";", ":"] and len(liste_mots[k]) > 1:
-            liste_mots[k:k+1] = [liste_mots[k][:-1],liste_mots[k][-1]]
-    return liste_mots
+    return nltk.word_tokenize(sentence)
+
 
 #print(wordify('tests, ds: pomme de terre; oui'))
 #print(sentencify("Salut, ce projet traite de l'extraction de règles? Ce texte est un lorem ipsum. If Yes then No! iF qsldfkqsdl thEn zepfidkj. Okambonac zuitel, oksof: yaya. If not true. If Then you !"))
@@ -64,4 +62,6 @@ def naive_condition_extract(text):
 
 #print(naive_condition_extract("Salut, ce projet traite de l'extraction de règles? Ce texte est un lorem ipsum. If Yes then No! iF qsldfkqsdl thEn zepfidkj. Okambonac zuitel, oksof: yaya. If not true. If Then you !"))
 
+
 print(naive_condition_extract('When the cookies are in the oven, start it.')) 
+
