@@ -85,7 +85,7 @@ def wordLoader(documentWord):
                 condition = ""
                 consequence = ""
                 action = ""
-        if rule != "":
+        if rule != "" and condition != "":
             rules.append(Rule(rule, condition, consequence, action))
             rule = ""
             condition = ""
