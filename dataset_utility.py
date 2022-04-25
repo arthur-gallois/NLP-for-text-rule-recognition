@@ -1,8 +1,5 @@
-from distutils.command.config import config
-from itertools import tee
 import os
 import json
-import docx
 import sys
 
 
@@ -42,7 +39,7 @@ class Rule:
         return '{' + f'"text" : "{text}", "condition" : "{condition}", "consequence" : "{consequence}","action" : "{action}"' + '}'
 
 
-def parse(input_json):
+def parseJson(input_json):
     try:
         text_dict = json.loads(input_json)
         text = Text(text_dict["text"])
@@ -55,7 +52,17 @@ def parse(input_json):
     return text
 
 
+def getJson(json_name):
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    json_path = f"{file_path}\\dataset\\json\\{json_name}.json"
+    f = open(json_path, "r", encoding='utf-8')
+    lines = f.readlines()
+    return parseJson(lines[0])
+
+
 def wordLoader(documentWord):
+    import docx
+
     # documentWord est le chemin du docx (au format str)
     doc = docx.Document(documentWord)
     k = len(doc.paragraphs)
@@ -108,3 +115,4 @@ if __name__ == '__main__':
         path = os.path.dirname(os.path.abspath(__file__))
         json_text = wordLoader(f"{path}/dataset/docx/{sys.argv[1]}.docx")
         saveJson(sys.argv[1], json_text.stringify())
+        test = parseJson(json_text.stringify())
