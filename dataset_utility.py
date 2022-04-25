@@ -12,6 +12,8 @@ class Text:
 
     def __repr__(self):
         text = self.text.replace('"', '\\"')
+        text = self.text.replace("‘", '\\')
+        text = self.text.replace("’", "\\")
         return '{' + f'"text" : "{text}","rules" : {self.rules}' + '}'
 
     def stringify(self):
@@ -32,9 +34,20 @@ class Rule:
 
     def __repr__(self):
         text = self.text.replace('"', '\\"')
+        text = self.text.replace("‘", '\\')
+        text = self.text.replace("’", "\\")
+
         condition = self.condition.replace('"', '\\"')
+        condition = self.condition.replace("‘", '\\')
+        condition = self.condition.replace("’", "\\")
+
         consequence = self.consequence.replace('"', '\\"')
+        consequence = self.consequence.replace("‘", '\\')
+        consequence = self.consequence.replace("’", "\\")
+        
         action = self.action.replace('"', '\\"')
+        action = self.action.replace("‘", '\\')
+        action = self.action.replace("’", "\\")
 
         return '{' + f'"text" : "{text}", "condition" : "{condition}", "consequence" : "{consequence}","action" : "{action}"' + '}'
 
