@@ -11,9 +11,10 @@ class Text:
         self.text = text
 
     def __repr__(self):
-        text = self.text.replace('"', '\\"')
-        text = self.text.replace("‘", '\\"')
-        text = self.text.replace("’", '\\"')
+        text = repr(self.text).replace('\\', '/')
+        text = text.replace('"', '\\"')
+        text = text.replace("‘", '\\"')
+        text = text.replace("’", '\\"')
         return '{' + f'"text" : "{text}","rules" : {self.rules}' + '}'
 
     def stringify(self):
@@ -33,21 +34,25 @@ class Rule:
         self.action = action
 
     def __repr__(self):
-        text = self.text.replace('"', '\\"')
-        text = self.text.replace("‘", '\\"')
-        text = self.text.replace("’", '\\"')
+        text = repr(self.text).replace('\\', '/')
+        text = text.replace('"', '\\"')
+        text = text.replace("‘", '\\"')
+        text = text.replace("’", '\\"')
 
-        condition = self.condition.replace('"', '\\"')
-        condition = self.condition.replace("‘", '\\"')
-        condition = self.condition.replace("’", '\\"')
+        condition = repr(self.condition).replace('\\', '/')
+        condition = condition.replace('"', '\\"')
+        condition = condition.replace("‘", '\\"')
+        condition = condition.replace("’", '\\"')
 
-        consequence = self.consequence.replace('"', '\\"')
-        consequence = self.consequence.replace("‘", '\\"')
-        consequence = self.consequence.replace("’", '\\"')
+        consequence = repr(self.consequence).replace('\\', '/')
+        consequence = consequence.replace('"', '\\"')
+        consequence = consequence.replace("‘", '\\"')
+        consequence = consequence.replace("’", '\\"')
 
-        action = self.action.replace('"', '\\"')
-        action = self.action.replace("‘", '\\"')
-        action = self.action.replace("’", '\\"')
+        action = repr(self.action).replace('\\', '/')
+        action = action.replace('"', '\\"')
+        action = action.replace("‘", '\\"')
+        action = action.replace("’", '\\"')
 
         return '{' + f'"text" : "{text}", "condition" : "{condition}", "consequence" : "{consequence}","action" : "{action}"' + '}'
 
