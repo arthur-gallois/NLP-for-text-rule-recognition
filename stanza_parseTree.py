@@ -278,6 +278,10 @@ def list_cause_consequence(sentence):
 
 
 def compare_lists(l1, l2):
+    if l1 == None and l2 == None:
+        return 1
+    elif l1 == None or l2 == None:
+        return 0
     n1 = len(l1)
     n2 = len(l2)
     set1 = set(l1)
