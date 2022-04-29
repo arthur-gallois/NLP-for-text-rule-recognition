@@ -1,5 +1,5 @@
 import stanza
-#from dataset_utility import *
+# from dataset_utility import *
 
 # stanza.download('en')
 nlp = stanza.Pipeline('en')
@@ -73,8 +73,8 @@ def rebuild(l):
     if l == None:
         return None
     sentence = str(l[0])
-    contraction = ["n’t", "n't", ","]
-    not_okay = [".", "?", "!", "(", ")", ",", "-", "/", " "]
+    contraction = ["n’t", "n't", ",", "'s", "'ll", "'re", ")", "("]
+    not_okay = [".", "?", "!", ",", "-", "/", " "]
     for i in range(1, len(l)):
         word = l[i]
         if word in contraction:
@@ -103,11 +103,10 @@ def test_rebuild():
 
 def sbar_test(tree):
     words = ["unless", "Unless", "If", "if", "when",
-             "When", "After", "after", "because", "Because", "Since", "since", "provided", "Provided", "that", "That", "while", "While", "as", "before", "Before", "only", "Only"]
+             "When", "After", "after", "because", "Because", "Since", "since", "provided", "Provided", "that", "That", "while", "While", "as"]
     text = extract_all(tree)
-    for word in text:
-        if word in words:
-            return True
+    if text[0] in words:
+        return True
     return False
 
 
@@ -166,11 +165,11 @@ def test_sentence(sentence):
     for s in doc.sentences:
         c = s.constituency
         print(c.children[0])
-        #print("\n"+"dependencies :")
+        # print("\n"+"dependencies :")
         # print(s.dependencies)
 
 
-# print(test_sentence(s12))
+#print(test_sentence("The easiest way to figure this is out is by installing one of a free system information tool, which should tell you if your BIOS is made by AMI, Award, Phoenix, or another company"))
 
 
 # Forme exploitable de conséquences
@@ -199,7 +198,7 @@ def test_delete_sequence():
     print(sentence)
 
 
-test_delete_sequence()
+# test_delete_sequence()
 
 
 def identify_consequence(sentence, cause):
@@ -266,3 +265,36 @@ def cause_consequence(sentence):
     print("cause :", cause)
     consequence = rebuild(identify_consequence(sentence, cause))
     print("consequence :", consequence)
+
+
+#cause_consequence("The easiest way to figure this is out is by installing one of a free system information tool, which should tell you if your BIOS is made by AMI, Award, Phoenix, or another company")
+
+
+def list_cause_consequence(sentence):
+    cause_list = identify_cause(sentence)
+    cause = rebuild(cause_list)
+    consequence_list = identify_consequence(sentence, cause)
+    return cause_list, consequence_list
+
+
+def compare_lists(l1, l2):
+    n1 = len(l1)
+    n2 = len(l2)
+    set1 = set(l1)
+    set2 = set(l2)
+    z = set1.intersection(set2)
+    return (len(z)*2)/(n1+n2)
+
+
+#print(list_cause_consequence("Also, make a note if the beeps repeat"))
+
+def test_compare_lists(sentence):
+    cause = "if the beeps repeat"
+    cause = cause.split()
+    cause_algo = identify_cause(sentence)
+    print(cause)
+    print(cause_algo)
+    print(compare_lists(cause, cause_algo))
+
+
+#test_compare_lists("Also, make a note if the beeps repeat")
