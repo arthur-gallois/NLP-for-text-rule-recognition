@@ -1,70 +1,59 @@
-import tensorflow_hub as hub
-import pandas as pd
-import tokenization
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras.layers import Dense, Input
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.models import Model
-from tensorflow.keras.callbacks import ModelCheckpoint
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import cross_val_score
+import torch
+import transformers as ppb
+import warnings
+warnings.filterwarnings('ignore')
 
-module_url = "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1"
+df = pd.read_csv('https://github.com/clairett/pytorch-sentiment-classification/raw/master/data/SST2/train.tsv', delimiter='\t', header=None)
 
-bert_layer = hub.KerasLayer(module_url, trainable=True)
+batch_1 = df[:2000]
+batch_1[1].value_counts()
 
-train = pd.read_csv("C:/Users/eliot/BERT_Easy_Implementation/data/train.csv")
-test = pd.read_csv("C:/Users/eliot/BERT_Easy_Implementation/data/test.csv")
-train.head(3)
+# For DistilBERT:
+model_class, tokenizer_class, pretrained_weights = (ppb.DistilBertModel, ppb.DistilBertTokenizer, 'distilbert-base-uncased')
 
+## Want BERT instead of distilBERT? Uncomment the following line:
+#model_class, tokenizer_class, pretrained_weights = (ppb.BertModel, ppb.BertTokenizer, 'bert-base-uncased')
 
+# Load pretrained model/tokenizer
+tokenizer = tokenizer_class.from_pretrained(pretrained_weights)
+model = model_class.from_pretrained(pretrained_weights)
 
-def bert_encode(texts, tokenizer, max_len=512):
-    all_tokens = []
-    all_masks = []
-    all_segments = []
-    
-    for text in texts:
-        text = tokenizer.tokenize(text)
-            
-        text = text[:max_len-2]
-        input_sequence = ["[CLS]"] + text + ["[SEP]"]
-        pad_len = max_len - len(input_sequence)
-        
-        tokens = tokenizer.convert_tokens_to_ids(input_sequence)
-        tokens += [0] * pad_len
-        pad_masks = [1] * len(input_sequence) + [0] * pad_len
-        segment_ids = [0] * max_len
-        
-        all_tokens.append(tokens)
-        all_masks.append(pad_masks)
-        all_segments.append(segment_ids)
-    
-    return np.array(all_tokens), np.array(all_masks), np.array(all_segments)
+tokenized = batch_1[0].apply((lambda x: tokenizer.encode(x, add_special_tokens=True)))
 
+max_len = 0
+for i in tokenized.values:
+    if len(i) > max_len:
+        max_len = len(i)
 
-vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
-do_lower_case = bert_layer.resolved_object.do_lower_case.numpy()
-tokenizer = tokenization.FullTokenizer(vocab_file, do_lower_case)
+padded = np.array([i + [0]*(max_len-len(i)) for i in tokenized.values])
 
-train_input = bert_encode(train.text.values, tokenizer, max_len=100)
-test_input = bert_encode(test.text.values, tokenizer, max_len=100)
-train_labels = train.label.values
-test_labels = test.label.values
+attention_mask = np.where(padded != 0, 1, 0)
 
+input_ids = torch.tensor(padded)  
+attention_mask = torch.tensor(attention_mask)
 
+with torch.no_grad():
+    last_hidden_states = model(input_ids, attention_mask=attention_mask)
 
-def build_model(bert_layer, max_len=512):
-    input_word_ids = Input(shape=(max_len,), dtype=tf.int32, name="input_word_ids")
-    input_mask = Input(shape=(max_len,), dtype=tf.int32, name="input_mask")
-    segment_ids = Input(shape=(max_len,), dtype=tf.int32, name="segment_ids")
+features = last_hidden_states[0][:,0,:].numpy()
 
-    _, sequence_output = bert_layer([input_word_ids, input_mask, segment_ids])
-    clf_output = sequence_output[:, 0, :]
-    out = Dense(1, activation='sigmoid')(clf_output)
-    
-    model = Model(inputs=[input_word_ids, input_mask, segment_ids], outputs=out)
-    model.compile(Adam(lr=2e-6), loss='binary_crossentropy', metrics=['accuracy'])
-    
-    return model
+labels = batch_1[1]
 
-model = build_model(bert_layer, max_len=100)
+train_features, test_features, train_labels, test_labels = train_test_split(features, labels)
+
+lr_clf = LogisticRegression()
+lr_clf.fit(train_features, train_labels)
+
+lr_clf.score(test_features, test_labels)
+
+from sklearn.dummy import DummyClassifier
+clf = DummyClassifier()
+
+scores = cross_val_score(clf, train_features, train_labels)
+print("Dummy classifier score: %0.3f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
