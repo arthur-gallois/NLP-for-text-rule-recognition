@@ -1,6 +1,7 @@
 import stanza
 # stanza.download('en')
-
+nlp = stanza.Pipeline(
+        'en', processors='tokenize,mwt,pos,lemma,depparse,ner,sentiment,constituency')
 liste_mots = ['if', 'unless', 'otherwise', 'case']
 
 
@@ -33,10 +34,7 @@ def exception(phrase, mot):
 
 def cause_consequences(text):
     compt = 0
-    nlp = stanza.Pipeline(
-        'en', processors='tokenize,mwt,pos,lemma,depparse,ner,sentiment,constituency')
     doc = nlp(text)
-    print(len(doc.sentences))
     for p in range(len(doc.sentences)):
         phrase = doc.sentences[p].to_dict()
         if phrase[-1]['text'] == '?':  # on verifie que le phrase n'est pas une question
@@ -79,11 +77,12 @@ def cause_consequences(text):
                 consequences.sort(key=take_id)
                 causes = list(map(take_text, causes))
                 consequences = list(map(take_text, consequences))
-                print('Cause:')
-                print(causes)
-                print('Conséquence:')
-                print(consequences)
-                print(compt)
+                # print('Cause:')
+                # print(causes)
+                # print('Conséquence:')
+                # print(consequences)
+                # print(compt)
+                return causes, consequences
 
 
 p1 = 'If your players will be wearing cleats, make sure they are soccer cleats.'
@@ -100,7 +99,7 @@ Install a tool to determine the BIOS maker and then consult the appropriate onli
 This article explains how to figure out why your PC is beeping by noting the beep pattern, determining your computer's BIOS maker, and consulting the matching online guide.
 
 How to Troubleshoot Beep Codes
-If you're hearing beep codes after you turn your computer on—and then it doesn't start—it means the motherboard encountered some kind of problem before it was able to send any error information to the monitor.
+If you're hearing beep codes after you turn your computer on and then it doesn't start—it means the motherboard encountered some kind of problem before it was able to send any error information to the monitor.
 
 Follow these steps below to determine what computer problem the beep code is representing. Once you know what's wrong, you can work to fix the problem.
 
