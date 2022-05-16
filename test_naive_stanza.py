@@ -3,9 +3,8 @@ from sympy import N
 from dataset_utility import *
 from naive_stanza import *
 
-text = getJson('data2')
+text = getJson('dataset')
 # print(len(text.rules[0].condition))
-print(text.rules)
 ratio_bon_cause = 0
 ratio_nul_cause = 0
 ratio_bon_conseq = 0
@@ -31,8 +30,8 @@ for k in range(n):
             mauvais_mots += 1
     ratio_bon_conseq += bon_mots/len(text.rules[k].condition)
     ratio_nul_conseq += mauvais_mots/len(cause)
-ratio_bon_cause /= n*100
-ratio_nul_cause /= n*100
-ratio_bon_conseq /= n*100
-ratio_nul_conseq /= n*100
+ratio_bon_cause *= 100/n
+ratio_nul_cause *= 100/n
+ratio_bon_conseq *= 100/n
+ratio_nul_conseq *= 100/n
 print(ratio_bon_cause, ratio_nul_cause, ratio_bon_conseq, ratio_nul_conseq)
