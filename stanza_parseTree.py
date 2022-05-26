@@ -103,7 +103,7 @@ def test_rebuild():
 
 def sbar_test(tree):
     words = ["unless", "Unless", "If", "if", "when",
-             "When", "After", "after", "because", "Because", "Since", "since", "provided", "Provided", "that", "That", "while", "While", "as"]
+             "When", "After", "after", "because", "Because", "Since", "since", "provided", "Provided", "while", "While"]
     text = extract_all(tree)
     if text[0] in words:
         return True
@@ -210,7 +210,7 @@ def identify_consequence(sentence, cause):
     while len(next) > 0:
         t = next.pop()
         # Construction de texte en SBAR
-        if t.label == "VP":
+        if t.label == "S":
             return extract_all(t)
         if not is_final(t):
             for c in t.children:
@@ -275,30 +275,3 @@ def list_cause_consequence(sentence):
     cause = rebuild(cause_list)
     consequence_list = identify_consequence(sentence, cause)
     return cause_list, consequence_list
-
-
-def compare_lists(l1, l2):
-    if l1 == None and l2 == None:
-        return 1
-    elif l1 == None or l2 == None:
-        return 0
-    n1 = len(l1)
-    n2 = len(l2)
-    set1 = set(l1)
-    set2 = set(l2)
-    z = set1.intersection(set2)
-    return (len(z)*2)/(n1+n2)
-
-
-#print(list_cause_consequence("Also, make a note if the beeps repeat"))
-
-def test_compare_lists(sentence):
-    cause = "if the beeps repeat"
-    cause = cause.split()
-    cause_algo = identify_cause(sentence)
-    print(cause)
-    print(cause_algo)
-    print(compare_lists(cause, cause_algo))
-
-
-#test_compare_lists("Also, make a note if the beeps repeat")
