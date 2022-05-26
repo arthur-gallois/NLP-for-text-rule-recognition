@@ -7,6 +7,8 @@ class Text:
     rules = []
     text = ""
 
+    min_sentence_len = 10
+
     def __init__(self, text):
         self.text = text
 
@@ -16,6 +18,25 @@ class Text:
 
     def stringify(self):
         return self.__repr__()
+
+    def get_sentences(self):
+        sentences = [sentence.strip(" ") for sentence in self.text.split(
+            '.') if len(sentence.strip(" ")) > self.min_sentence_len]
+        conditions = [rule.text for rule in self.rules]
+        non_conditional_sentences = []
+        conditional_sentences = []
+        for sentence in sentences:
+            is_conditional = False
+            n = 0
+            for condition in conditions:
+                if condition in sentence:
+                    is_conditional = True
+                    n += 1
+            if is_conditional:
+                conditional_sentences.append(sentence)
+            else:
+                non_conditional_sentences.append(sentence)
+            return(conditional_sentences, non_conditional_sentences)
 
 
 class Rule:
@@ -47,7 +68,7 @@ def parseJson(input_json):
             text.rules.append(Rule(rule["text"], rule["condition"],
                                    rule["consequence"], rule["action"]))
     except:
-        print("Error : Wrong text format")
+        print("\033[91m Error : Wrong text format \033[0m")
         return None
     return text
 
@@ -68,7 +89,7 @@ def wordLoader(documentWord):
     k = len(doc.paragraphs)
     word_text = ""
     for para in doc.paragraphs:
-        word_text += para.text
+        word_text += para.text.replace('\n', '').replace("\xa0", '')
     text = Text(word_text)
 
     rules = []
@@ -87,13 +108,15 @@ def wordLoader(documentWord):
             if run.bold and run.italic:
                 action += run.text
             if not run.underline and rule != "":
-                rules.append(Rule(rule, condition, consequence, action))
+                rules.append(
+                    Rule(rule.strip(".").replace('\n', '').replace("\xa0", ''), condition, consequence, action))
                 rule = ""
                 condition = ""
                 consequence = ""
                 action = ""
         if rule != "" and condition != "":
-            rules.append(Rule(rule, condition, consequence, action))
+            rules.append(Rule(rule.strip(".").replace('\n', '').replace(
+                "\xa0", ''), condition, consequence, action))
             rule = ""
             condition = ""
             consequence = ""
@@ -110,7 +133,16 @@ def saveJson(json_name, json_text):
 
 if __name__ == '__main__':
     if(len(sys.argv) < 2):
-        print("Veuillez spécifier le nom du word")
+        print("\033[91m Veuillez spécifier le nom du word \033[0m")
+    elif(sys.argv[1] == "all"):
+        path = os.path.dirname(os.path.abspath(__file__))
+        for _, _, filenames in os.walk(f'{path}/dataset/docx/'):
+            for filename in filenames:
+                name = filename.split(".")[0]
+                print(f"Generating {name}.json")
+                json_text = wordLoader(f"{path}/dataset/docx/{name}.docx")
+                saveJson(name, json_text.stringify())
+                test = parseJson(json_text.stringify())
     else:
         path = os.path.dirname(os.path.abspath(__file__))
         json_text = wordLoader(f"{path}/dataset/docx/{sys.argv[1]}.docx")
