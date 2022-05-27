@@ -215,11 +215,11 @@ def identify_consequence(sentence, cause):
         if not is_final(t):
             for c in t.children:
                 next = [c]+next
-    return new_sentence
+    return new_sentence.split()
 
 
 def test_identify_consequence():
-    sentence = s9
+    sentence = "Power on the computer or restart it if it's already on"
     print("\n"+"sentence :", sentence)
     cause = rebuild(identify_cause(sentence))
     print("\n" + "cause :", cause)

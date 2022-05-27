@@ -1,3 +1,5 @@
+from genericpath import exists
+from ntpath import realpath
 import os
 import json
 import sys
@@ -125,6 +127,8 @@ def saveJson(json_name, json_text):
     with open(f"{path}/dataset/json/{json_name}.json", 'w', encoding='utf8') as file:
         file.write(json_text)
 
+
+getJson("dataset")
 
 if __name__ == '__main__':
     if(len(sys.argv) < 2):
