@@ -1,10 +1,16 @@
-import stanza
-# from dataset_utility import *
+#########################################
+# Importations des fichiers .json
+#########################################
 
+import stanza
+
+# À décomenter pour la première utilisation de Stanza
 # stanza.download('en')
 nlp = stanza.Pipeline('en')
 
-# Les phrases tests
+#########################################
+# Phrases tests
+#########################################
 
 s1 = "If the cookies are in the oven, start it"
 s2 = "When the cookies are in the oven, start it"
@@ -27,8 +33,6 @@ doc5 = nlp(s5)
 doc6 = nlp(s6)
 doc7 = nlp(s7)
 
-# Quand les causes sont identifiées dans la phrase
-
 test1 = nlp(
     "Use extreme care when inserting a spoon or other utensil into the container.")
 test2 = nlp("Carefully attend the microwave oven if paper, plastic, or other combustible materials are placed inside the oven to facilitate cooking. ")
@@ -36,12 +40,24 @@ test2 = nlp("Carefully attend the microwave oven if paper, plastic, or other com
 test3 = nlp(
     "Always use oven mitts or pot holders when removing dishes from the microwave oven. ")
 
+#########################################
+# Fonctions utiles pour la manipulation d'arbre syntaxique
+#########################################
+
 
 def is_final(tree):
+    """
+    Renvoie un booléen indiquant si l'arbre syntaxique n'a pas de fils
+    """
+
     return str(tree)[0] != '('
 
 
 def test_is_final():
+    """
+    Test de la fonction is_final
+    """
+
     for s in doc5.sentences:
         p = s.constituency
         return is_final(p)
@@ -51,6 +67,12 @@ def test_is_final():
 
 
 def extract_all(tree):
+    """
+    Reconstitue un arbre syntaxique sous forme de liste
+    Entrée : arbre syntaxique
+    Sortie : liste ordonnée des mots de l'arbre syntaxique
+    """
+
     sentence = []
     next = [tree]
     while len(next) > 0:
@@ -64,12 +86,19 @@ def extract_all(tree):
 
 
 def test_extract_all():
+    """
+    Test de la fonction extract_all
+    """
     for s in doc5.sentences:
         p = s.constituency
         return extract_all(p)
 
 
 def rebuild(l):
+    """
+    Transforme une liste de mots en phrase
+    """
+
     if l == None:
         return None
     sentence = str(l[0])
@@ -89,6 +118,9 @@ def rebuild(l):
 
 
 def test_rebuild():
+    """
+    Test de la fonction rebuild
+    """
     l = ['If', 'food', 'is', 'foil', 'wrapped', ',', 'remove', 'foil',
          'and', 'place', 'it', 'in', 'a', 'suitable', 'container', '.']
     print(rebuild(l))
@@ -96,12 +128,18 @@ def test_rebuild():
 
 # test_rebuild()
 
-##
-# IDENTIFICATION CAUSE
-##
+#########################################
+# Identification cause
+#########################################
 
 
 def sbar_test(tree):
+    """
+    Teste si l'arbre syntaxique actuelle comporte une proposition subordonnée
+    Entrée : arbre syntaxique
+    Sortie : Booléen
+    """
+
     words = ["unless", "Unless", "If", "if", "when",
              "When", "After", "after", "because", "Because", "Since", "since", "provided", "Provided", "while", "While"]
     text = extract_all(tree)
@@ -111,6 +149,12 @@ def sbar_test(tree):
 
 
 def pp_test(tree):
+    """
+    Teste si l'arbre syntaxique actuelle comporte une proposition prépositionelle 
+    Entrée : arbre syntaxique
+    Sortie : Booléen
+    """
+
     words = ["After", "after", "before", "Before"]
     text = extract_all(tree)
     for word in text:
@@ -120,6 +164,12 @@ def pp_test(tree):
 
 
 def search_sentence(tree):
+    """
+    Teste si l'arbre syntaxique actuelle comporte une phrase
+    Entrée : arbre syntaxique
+    Sortie : Booléen
+    """
+
     next = [tree]
     while len(next) > 0:
         t = next.pop()
@@ -129,10 +179,18 @@ def search_sentence(tree):
 
 
 def identify_cause(sentence):
+    """
+    Identifie la cause dans une phrase conditionnelle 
+    Entrée : phrase
+    Sortie : cause sous forme de liste de mots 
+    """
+
     doc = nlp(sentence)
     for s in doc.sentences:
         tree = s.constituency
     next = [tree]
+
+    # Parcours de l'arbre syntaxique en profondeur
     while len(next) > 0:
         t = next.pop()
         # Construction de cause sous la forme de subordonnée
@@ -154,13 +212,18 @@ def identify_cause(sentence):
 
 
 def test_identify_cause(sentence):
+    """
+    Teste de la fonction identify_cause
+    """
+
     print(identify_cause(sentence))
 
 
-# test_identify_cause(s1)
-
-
 def test_sentence(sentence):
+    """
+    Tests pour comprendre le fonctionnement des arbres syntaxiques
+    """
+
     doc = nlp(sentence)
     for s in doc.sentences:
         c = s.constituency
@@ -169,18 +232,16 @@ def test_sentence(sentence):
         # print(s.dependencies)
 
 
-#print(test_sentence("The easiest way to figure this is out is by installing one of a free system information tool, which should tell you if your BIOS is made by AMI, Award, Phoenix, or another company"))
+#########################################
+# Identification conséquence
+#########################################
 
-
-# Forme exploitable de conséquences
-
-#
-# IDENTIFICATION CONSEQUENCES
-#
 
 def delete_sequence(sentence, sequence):
     """
     Suprime une séquence de mots dans une phrase, longueur de la séquence plus petite que la phrase, la séquence est nécessairement dans la phrase
+    Entrée : une phrase et une séquence de mots (str)
+    Sortie : partie de la phrase sans la séquence identifiée
     """
     if sequence == None:
         return sentence
@@ -193,6 +254,10 @@ def delete_sequence(sentence, sequence):
 
 
 def test_delete_sequence():
+    """
+    Test de la fonction delete_sequence
+    """
+
     sentence = delete_sequence(
         "Do not operate the microwave oven if it has a damaged cord or plug, if it is not working properly, or if it has been damaged or dropped", "if it is not working properly, or if it has been damaged or dropped")
     print(sentence)
@@ -202,6 +267,13 @@ def test_delete_sequence():
 
 
 def identify_consequence(sentence, cause):
+    """
+    Identifie la conséquence dans une phrase conditionnelle 
+    Entrée : phrase
+    Sortie : conséquence sous forme de liste de mots 
+    """
+
+    # On supprime la cause identifée dans la phrase pour extraire la conséquence
     new_sentence = delete_sequence(sentence, cause)
     doc = nlp(str(new_sentence))
     for s in doc.sentences:
@@ -209,7 +281,7 @@ def identify_consequence(sentence, cause):
     next = [tree]
     while len(next) > 0:
         t = next.pop()
-        # Construction de texte en SBAR
+        # Construction de texte sous forme de phrase
         if t.label == "S":
             return extract_all(t)
         if not is_final(t):
@@ -219,6 +291,10 @@ def identify_consequence(sentence, cause):
 
 
 def test_identify_consequence():
+    """
+    Test de la fonction identify_consequence
+    """
+
     sentence = "Power on the computer or restart it if it's already on"
     print("\n"+"sentence :", sentence)
     cause = rebuild(identify_cause(sentence))
@@ -230,39 +306,23 @@ def test_identify_consequence():
 # test_identify_consequence()
 
 
-def dic_consequences(tree):
-    """
-    Si la conséquence est connue, identifie des mots importants dedans
-    Entrée: le sous arbre syntaxique de la conséquence
-    Sortie: dictionnaire de mots importants dans la conséquence.
-    """
-    dic = {}
-    next = [tree]
-    while len(next) > 0:
-        t = next.pop()
-        if t.label == "VB":
-            dic["VB"] = rebuild(extract_all(t))
-        if t.label == "NN":
-            dic["NN"] = rebuild(extract_all(t))
-        if not is_final(t):
-            for c in t.children:
-                next.append(c)
-    return dic
-
-
-def test_dic_consequence(doc):
-    for s in doc.sentences:
-        p = s.constituency
-        print(dic_consequences(p))
-
-#
-# ALGO FINAL
-#
+#########################################
+# Algo final
+#########################################
 
 
 def cause_consequence(sentence):
+    """
+    Identifie la cause et la conséquence d'une phrase
+    Entrée : phrase
+    Sortie : affiche la cause et la conséquence d'une phrase sous forme de chaîne de caractères 
+    """
+
+    # Affiche la cause sous forme de phrase (str)
     cause = rebuild(identify_cause(sentence))
     print("cause :", cause)
+
+    # Affiche la conséquence sous forme de phrase (str)
     consequence = rebuild(identify_consequence(sentence, cause))
     print("consequence :", consequence)
 
@@ -271,6 +331,12 @@ def cause_consequence(sentence):
 
 
 def list_cause_consequence(sentence):
+    """
+    Identifie la cause et la conséquence d'une phrase
+    Entrée : phrase
+    Sortie : retourne la cause et la conséquence d'une phrase sous forme de listes
+    """
+
     cause_list = identify_cause(sentence)
     cause = rebuild(cause_list)
     consequence_list = identify_consequence(sentence, cause)

@@ -29,6 +29,22 @@ with open("pole-ia_NLP/dataset/json/football_rule.json") as file:
     DATA_dict = json.load(file)
     footbal_rule = DATA_dict["rules"]
 
+with open("pole-ia_NLP/dataset/json/Dense_Dataset.json") as file:
+    DATA_dict = json.load(file)
+    Dense_Dataset = DATA_dict["rules"]
+
+with open("pole-ia_NLP/dataset/json/Musique_classique_rules.json") as file:
+    DATA_dict = json.load(file)
+    Musique_classique_rules = DATA_dict["rules"]
+
+with open("pole-ia_NLP/dataset/json/Rules_of_grammar.json") as file:
+    DATA_dict = json.load(file)
+    Rules_of_grammar = DATA_dict["rules"]
+
+with open("pole-ia_NLP/dataset/json/Sport_rules.json") as file:
+    DATA_dict = json.load(file)
+    Sport_rules = DATA_dict["rules"]
+
 #########################################
 # Fonction de comparaison
 #########################################
@@ -91,7 +107,7 @@ def compare(text):
         print("\n")
 
 
-compare(footbal_rule)
+# compare(Dense_Dataset)
 
 
 def pourcentage_ressemblance(text):
@@ -116,7 +132,7 @@ def pourcentage_ressemblance(text):
     return p/(2*M)*100
 
 
-print(pourcentage_ressemblance(footbal_rule))
+# print(pourcentage_ressemblance(Sport_rules))
 
 #########################################
 # Résultats des comparaisons
@@ -130,7 +146,7 @@ print(pourcentage_ressemblance(footbal_rule))
 
 
 ##
-# data2 (viable)
+# data2 (non viable)
 ##
 
 # POURCENTAGE 47,8%
@@ -158,7 +174,35 @@ print(pourcentage_ressemblance(footbal_rule))
 
 
 ##
-# footaball_rule
+# footaball_rule (non viable)
 ##
 
-# POURCENTAGE 27%
+# POURCENTAGE 34,1
+
+
+##
+# Dense_Dataset (viable)
+##
+
+# POURCENTAGE 89,9
+
+
+##
+# Musique_classique (viable)
+##
+
+# POURCENTAGE 74,8
+
+
+##
+# Rules_of_grammar (viable)
+##
+
+# POURCENTAGE 65,1
+
+
+##
+# Sport_rules (viable)
+##
+
+# POURCENTAGE 65,1
