@@ -7,7 +7,7 @@ keyword_list = {
     'UNTIL':{
     },
     'PROVIDED':{
-        'Composite':[[('Word',-1,'THAT')]]
+        'Composite':[[('Word',1,'THAT')]]
     },
     'ASSUMING':{
         'Composite':[[('Word',1,'THAT')]]
