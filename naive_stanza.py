@@ -10,19 +10,12 @@ def take_id(mot):
 def take_text(mot):
     return mot[0]
 
-def fils(phrase):
-    n = len(phrase)
-    aux = [[] for k in range(n)]
-    for mot in phrase:
-        if mot['head'] != 0:
-            aux[mot['head']-1].append(mot['id'])
-
 def exception(phrase, mot):
     if mot['id'] != 1:
-        if mot['lemma'] == 'if' and phrase[mot['id']-2]['lemma'] == 'even':
+        if mot['lemma'] == 'if' and phrase[mot['id']-2]['lemma'] == 'even': #even if ne correspond pas a une règle
             print('EXCEPTION')
             return True
-        if mot['lemma'] == 'case':
+        if mot['lemma'] == 'case':  #in case of  représente une règle
             if not(phrase[mot['id']-2]['lemma'] == 'in' and phrase[mot['id']]['lemma'] == 'of'):
                 return True
     return False
