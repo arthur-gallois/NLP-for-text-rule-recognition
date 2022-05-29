@@ -1,5 +1,5 @@
 #########################################
-# Importations des fichiers .json
+# Importations
 #########################################
 
 import stanza
@@ -75,6 +75,8 @@ def extract_all(tree):
 
     sentence = []
     next = [tree]
+
+    # On effectue un parcours en profondeur de l'arbre pour récupérer tous les noeuds terminaux (mots)
     while len(next) > 0:
         t = next.pop()
         if not is_final(t):
@@ -97,12 +99,17 @@ def test_extract_all():
 def rebuild(l):
     """
     Transforme une liste de mots en phrase
+    Entrée : liste de mots
+    Sortie : phrase (chaine de caractères)
     """
 
     if l == None:
         return None
     sentence = str(l[0])
+    # Liste des contraction qui puevent parfois poser problème dans l'analyse de la phrase
     contraction = ["n’t", "n't", ",", "'s", "'ll", "'re", ")", "("]
+
+    # Ponctuation à supprimer dans le résultat final
     not_okay = [".", "?", "!", ",", "-", "/", " "]
     for i in range(1, len(l)):
         word = l[i]
@@ -140,6 +147,7 @@ def sbar_test(tree):
     Sortie : Booléen
     """
 
+    # Mots servant à reconnaitre une proposition subordonnée contenant une règle
     words = ["unless", "Unless", "If", "if", "when",
              "When", "After", "after", "because", "Because", "Since", "since", "provided", "Provided", "while", "While"]
     text = extract_all(tree)
@@ -150,11 +158,12 @@ def sbar_test(tree):
 
 def pp_test(tree):
     """
-    Teste si l'arbre syntaxique actuelle comporte une proposition prépositionelle 
+    Teste si l'arbre syntaxique actuelle comporte une proposition prépositionnelle 
     Entrée : arbre syntaxique
     Sortie : Booléen
     """
 
+    # Mots servant à reconnaitre une proposition prépositionnelle contenant une règle
     words = ["After", "after", "before", "Before"]
     text = extract_all(tree)
     for word in text:
@@ -325,6 +334,7 @@ def cause_consequence(sentence):
     # Affiche la conséquence sous forme de phrase (str)
     consequence = rebuild(identify_consequence(sentence, cause))
     print("consequence :", consequence)
+    return cause, consequence
 
 
 #cause_consequence("The easiest way to figure this is out is by installing one of a free system information tool, which should tell you if your BIOS is made by AMI, Award, Phoenix, or another company")
@@ -341,3 +351,10 @@ def list_cause_consequence(sentence):
     cause = rebuild(cause_list)
     consequence_list = identify_consequence(sentence, cause)
     return cause_list, consequence_list
+
+
+#########################################
+# Test algo final
+#########################################
+
+#cause_consequence("If I inherited a billion dollars, I would travel to the moon")
