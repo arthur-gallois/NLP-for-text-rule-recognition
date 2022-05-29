@@ -1,5 +1,59 @@
-<<<<<<< HEAD
-{"text" : "Ado-files were introduced in [U] 17 Ado-files.When a user types ‘gobbledygook’, Stata first asks itself if gobbledygook is one of its built-in com-mands. If so, the command is executed. Otherwise, it asks itself if gobbledygook is a defined program.If so, the program is executed. Otherwise, Stata looks in various directories for gobbledygook.ado.If there is no such file, the process ends with the “unrecognized command” error.If Stata finds the file, it quietly issues to itself the command ‘run gobbledygook.ado’ (specifying thepath explicitly). If that runs without error, Stata asks itself again if gobbledygook is a defined program.If not, Stata issues the “unrecognized command” error. (Here somebody wrote a bad ado-file.) If theprogram is defined, as it should be, Stata executes it.Thus you can arrange for programs you write to be loaded automatically. For instance, if you wereto create hello.ado containingAfter finding and running gobbledygook.ado, Stata calculates the total size of all programs that ithas automatically loaded. If this exceeds adosize , Stata begins discarding the oldestautomatically loaded programs until the total is less than adosize. Oldest here is measured by thetime last used, not the time loaded. This discarding saves memory and does not affect you, becauseany program that was automatically loaded could be automatically loaded again if needed.It does, however, affect performance. Loading the program takes time, and you will again have towait if you use one of the previously loaded-and-discarded programs. Increasing adosize reducesthis possibility, but at the cost of memory. The set adosize command allows you to change thisparameter; see [P] sysdir. The default value of adosize is 1,000. A value of 1,000 for adosizemeans that up to 1,000 K can be allocated to autoloaded programs. Experimentation has shown thatthis is a good number — increasing it does not improve performance much.","rules" : [{"text" : "If so, the command is executed", "condition" : "If so", "consequence" : "the command is executed","action" : ""}, {"text" : "Otherwise, it asks itself if gobbledygook is a defined program", "condition" : "Otherwise", "consequence" : "asks itself if gobbledygook is a defined program","action" : ""}, {"text" : "If so, the program is executed", "condition" : "", "consequence" : "","action" : ""}, {"text" : "If there is no such file, the process ends with the “unrecognized command” error", "condition" : "If there is no such file", "consequence" : "the process ends with the “unrecognized command” error","action" : ""}, {"text" : "If Stata finds the file, it quietly issues to itself the command ‘run gobbledygook.ado’", "condition" : "If Stata finds the file", "consequence" : "it quietly issues to itself the command ‘run gobbledygook.ado’","action" : ""}, {"text" : "If that runs without error, Stata asks itself again if gobbledygook is a defined program", "condition" : "If that runs without error", "consequence" : "Stata asks itself again if gobbledygook is a defined program","action" : ""}, {"text" : "If not, Stata issues the “unrecognized command” error", "condition" : "If not", "consequence" : "Stata issues the “unrecognized command” error","action" : ""}, {"text" : "If this exceeds adosize , Stata begins discarding the oldest", "condition" : "If this exceeds adosize", "consequence" : "Stata begins discarding the oldest","action" : ""}, {"text" : "automatically loaded programs", "condition" : "", "consequence" : "automatically loaded programs","action" : ""}]}
-=======
-{"text" : "'Ado-files were introduced in [U] 17 Ado-files.When a user types \"gobbledygook\", Stata first asks itself if gobbledygook is one of its built-in com-mands. If so, the command is executed. Otherwise, it asks itself if gobbledygook is a defined program.If so, the program is executed. Otherwise, Stata looks in various directories for gobbledygook.ado.If there is no such file, the process ends with the “unrecognized command” error.If Stata finds the file, it quietly issues to itself the command \"run gobbledygook.ado\" (specifying thepath explicitly). If that runs without error, Stata asks itself again if gobbledygook is a defined program.If not, Stata issues the “unrecognized command” error. (Here somebody wrote a bad ado-file.) If theprogram is defined, as it should be, Stata executes it.Thus you can arrange for programs you write to be loaded automatically. For instance, if you wereto create hello.ado containingAfter finding and running gobbledygook.ado, Stata calculates the total size of all programs that ithas automatically loaded. If this exceeds adosize , Stata begins discarding the oldestautomatically loaded programs until the total is less than adosize. Oldest here is measured by thetime last used, not the time loaded. This discarding saves memory and does not affect you, becauseany program that was automatically loaded could be automatically loaded again if needed.It does, however, affect performance. Loading the program takes time, and you will again have towait if you use one of the previously loaded-and-discarded programs. Increasing adosize reducesthis possibility, but at the cost of memory. The set adosize command allows you to change thisparameter; see [P] sysdir. The default value of adosize is 1,000. A value of 1,000 for adosizemeans that up to 1,000 K can be allocated to autoloaded programs. Experimentation has shown thatthis is a good number — increasing it does not improve performance much.'","rules" : [{"text" : "'If so, the command is executed'", "condition" : "'If so'", "consequence" : "'the command is executed'","action" : "''"}, {"text" : "'Otherwise, it asks itself if gobbledygook is a defined program.'", "condition" : "'Otherwise'", "consequence" : "'asks itself if gobbledygook is a defined program'","action" : "''"}, {"text" : "'If so, the program is executed'", "condition" : "''", "consequence" : "''","action" : "''"}, {"text" : "'If there is no such file, the process ends with the “unrecognized command” error'", "condition" : "'If there is no such file'", "consequence" : "'the process ends with the “unrecognized command” error'","action" : "''"}, {"text" : "'If Stata finds the file, it quietly issues to itself the command \"run gobbledygook.ado\"'", "condition" : "'If Stata finds the file'", "consequence" : "'it quietly issues to itself the command \"run gobbledygook.ado\"'","action" : "''"}, {"text" : "'If that runs without error, Stata asks itself again if gobbledygook is a defined program'", "condition" : "'If that runs without error'", "consequence" : "'Stata asks itself again if gobbledygook is a defined program'","action" : "''"}, {"text" : "'If not, Stata issues the “unrecognized command” error'", "condition" : "'If not'", "consequence" : "'Stata issues the “unrecognized command” error'","action" : "''"}, {"text" : "'If this exceeds adosize , Stata begins discarding the oldest'", "condition" : "'If this exceeds adosize'", "consequence" : "'Stata begins discarding the oldest'","action" : "''"}, {"text" : "'automatically loaded programs'", "condition" : "''", "consequence" : "'automatically loaded programs'","action" : "''"}]}
->>>>>>> 7a8bf4648c4eeb13b0a340ec698d98d79f3530ba
+{
+    "text": "'Ado-files were introduced in [U] 17 Ado-files.When a user types \"gobbledygook\", Stata first asks itself if gobbledygook is one of its built-in com-mands. If so, the command is executed. Otherwise, it asks itself if gobbledygook is a defined program.If so, the program is executed. Otherwise, Stata looks in various directories for gobbledygook.ado.If there is no such file, the process ends with the “unrecognized command” error.If Stata finds the file, it quietly issues to itself the command \"run gobbledygook.ado\" (specifying thepath explicitly). If that runs without error, Stata asks itself again if gobbledygook is a defined program.If not, Stata issues the “unrecognized command” error. (Here somebody wrote a bad ado-file.) If theprogram is defined, as it should be, Stata executes it.Thus you can arrange for programs you write to be loaded automatically. For instance, if you wereto create hello.ado containingAfter finding and running gobbledygook.ado, Stata calculates the total size of all programs that ithas automatically loaded. If this exceeds adosize , Stata begins discarding the oldestautomatically loaded programs until the total is less than adosize. Oldest here is measured by thetime last used, not the time loaded. This discarding saves memory and does not affect you, becauseany program that was automatically loaded could be automatically loaded again if needed.It does, however, affect performance. Loading the program takes time, and you will again have towait if you use one of the previously loaded-and-discarded programs. Increasing adosize reducesthis possibility, but at the cost of memory. The set adosize command allows you to change thisparameter; see [P] sysdir. The default value of adosize is 1,000. A value of 1,000 for adosizemeans that up to 1,000 K can be allocated to autoloaded programs. Experimentation has shown thatthis is a good number — increasing it does not improve performance much.'",
+    "rules": [
+        {
+            "text": "'If so, the command is executed'",
+            "condition": "'If so'",
+            "consequence": "'the command is executed'",
+            "action": "''"
+        },
+        {
+            "text": "'Otherwise, it asks itself if gobbledygook is a defined program.'",
+            "condition": "'Otherwise'",
+            "consequence": "'asks itself if gobbledygook is a defined program'",
+            "action": "''"
+        },
+        {
+            "text": "'If so, the program is executed'",
+            "condition": "''",
+            "consequence": "''",
+            "action": "''"
+        },
+        {
+            "text": "'If there is no such file, the process ends with the “unrecognized command” error'",
+            "condition": "'If there is no such file'",
+            "consequence": "'the process ends with the “unrecognized command” error'",
+            "action": "''"
+        },
+        {
+            "text": "'If Stata finds the file, it quietly issues to itself the command \"run gobbledygook.ado\"'",
+            "condition": "'If Stata finds the file'",
+            "consequence": "'it quietly issues to itself the command \"run gobbledygook.ado\"'",
+            "action": "''"
+        },
+        {
+            "text": "'If that runs without error, Stata asks itself again if gobbledygook is a defined program'",
+            "condition": "'If that runs without error'",
+            "consequence": "'Stata asks itself again if gobbledygook is a defined program'",
+            "action": "''"
+        },
+        {
+            "text": "'If not, Stata issues the “unrecognized command” error'",
+            "condition": "'If not'",
+            "consequence": "'Stata issues the “unrecognized command” error'",
+            "action": "''"
+        },
+        {
+            "text": "'If this exceeds adosize , Stata begins discarding the oldest'",
+            "condition": "'If this exceeds adosize'",
+            "consequence": "'Stata begins discarding the oldest'",
+            "action": "''"
+        },
+        {
+            "text": "'automatically loaded programs'",
+            "condition": "''",
+            "consequence": "'automatically loaded programs'",
+            "action": "''"
+        }
+    ]
+}

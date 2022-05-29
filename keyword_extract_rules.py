@@ -1,9 +1,5 @@
-#from lib2to3.pgen2.literals import test
-import re
-#from pyparsing import Or 
 import stanza
 import nltk
-import pattern
 import keyword_list as kl
 nlp = stanza.Pipeline("en")
 
@@ -24,6 +20,14 @@ def test_stanza(sentence,indice):
     phrase = doc.sentences[0].to_dict()
     return phrase[indice]
 
+def is_commer(sword):
+    '''
+    renvoie True si le mot est ','  ';'  ou  ':'
+    et False sinon
+    '''
+    return sword['lemma'] in [',',';',':']
+
+
 def Conjugaison(sentence,indice,time,method='Any'):
     '''
     input:
@@ -37,8 +41,13 @@ def Conjugaison(sentence,indice,time,method='Any'):
 
     Cette fonction prend en argument une phrase contenant un mot clé se trouvant à 
     la position indice ainsi qu'un temps (exemple 'Past') et un méthode qui peut 
-    être un entier ou 'Any' la fonction renvoie True si il existe un verbe
+    être un entier, 'Any', 'Next' ou 'UC' (untill commer) la fonction renvoie True si il existe un verbe
     conjugué au temps time dans la phrase.
+
+    method:     int -> on regarde à la position indice + method
+                'Any' -> on regarde partout
+                'UC' -> on regarde jusqu'à la virgule
+                'Next' -> on regarde le premier verbe (ou jusqu'à la virgule)
     
     Exemple:    sentence: 'If I were here'
                 indice: 0
@@ -50,9 +59,9 @@ def Conjugaison(sentence,indice,time,method='Any'):
     Remarque: la méthode 'Any' permet de rechercher n'importe où dans la phrase
     '''
     if time == 'Past':
-        time_condition = 'Tense=Past'
-    elif time == 'ing':
-        time_condition = 'Tense=Pres|VerbForm=Part','VerbForm=Ger'
+        time_condition = ['Tense=Past']
+    elif time == '-ing':
+        time_condition = ['Tense=Pres|VerbForm=Part','VerbForm=Ger']
     else:
         raise Exception('''Le temps rentré n'est pas pris en charge''')
     doc = nlp(sentence)
@@ -63,13 +72,34 @@ def Conjugaison(sentence,indice,time,method='Any'):
                 for tc in time_condition:
                     if tc in mot['feats']:
                         return True
+    elif method == 'UC': #untill commer
+        for k in range(indice,len(phrase)):
+            mot = phrase[k]
+            if is_commer(mot):
+                break
+            if 'feats' in mot:
+                for tc in time_condition:
+                    if tc in mot['feats']:
+                        return True
+    elif method == 'Next':
+        for k in range(indice,len(phrase)):
+            mot = phrase[k]
+            if is_commer(mot):
+                break
+            if mot['upos'] == 'VERB':
+                if 'feats' in mot:
+                    for tc in time_condition:
+                        if tc in mot['feats']:
+                            return True
+                break
     elif type(method) == int:
         if indice+method < 0 or indice+method >= len(phrase):
             return False
         mot = phrase[indice+method]
         if 'feats' in mot:
-            if time_condition in mot['feats']:
-                return True
+            for tc in time_condition:
+                if tc in mot['feats']:
+                    return True
     return False
 
 def sentencify(text):
@@ -93,8 +123,6 @@ def sentencify(text):
         indice_texte += 1
     return liste_phrases
 
-print(sentencify('Hello.. My name is Valentin. If I were rich, I would be happy !'))
-
 def wordify(sentence):
     '''
     Entree : Une phrase (string).
@@ -104,6 +132,24 @@ def wordify(sentence):
 
 
 def is_exception(sentence,list_excep,indice):
+    '''
+    input:
+        sentence: str
+        list_excep: list((str,method,str)) avec method qui peut être un int ou 'Any'
+        indice: int
+
+    output:
+        bool
+    
+    la fonction renvoie True si le mot clé à la position indice dans la phrase est une exception
+    selon la règle donnée dans list_excep
+
+    Remarque : list_excep ne contient qu'une seule exception, c'est une liste car une exception peut être issue
+    de plusieurs conditions exemple When + passé + ! => exception
+
+    Remarque 2 : La terminologie est trompeuse, cette fonction permet à la fois de savoir si le mot
+    clé est une exception et si c'est une forme composite.
+    '''
     for excep in list_excep:
         if excep[0] == 'Word':
             liste_mots = wordify(sentence.upper())
@@ -116,12 +162,24 @@ def is_exception(sentence,list_excep,indice):
                     for k in range(len(liste_mots)):
                         if not liste_mots[k] == excep[2]:
                             return False
+                else:
+                    raise Exception("Cette méthode n'est pas traitée")
         elif excep[0] == 'Verb':
             if not Conjugaison(sentence,indice,excep[2],method=excep[1]):
                 return False
+        elif excep[0] == 'Upos':
+            liste_mots = wordify(sentence.upper())
+            if type(excep[1]) == int:
+                if (indice + excep[1] < 0) or (indice + excep[1] >= len(liste_mots)):
+                    return False
+                phrase = nlp(sentence)
+                sword = phrase.sentences[0].to_dict()[indice + excep[1]]
+                return ('upos' in sword) and (excep[2] in sword['upos'])
+            else:
+                raise Exception('''Pour l'instant, le upos n'est traité qu'avec la méthode int''')
     return True
 
-def is_condition(sentence):
+def is_rule(sentence):
     '''
     Entree : une phrase (string).
     Sortie : un booléen qui donne si la phrase est une condition (bool).
@@ -131,22 +189,23 @@ def is_condition(sentence):
     liste_mots = wordify(sentence.upper())
     for i in range(len(liste_mots)):
         if liste_mots[i] in kl.keyword_list:
-            is_cond = True
+            is_rule = True
             if 'Composite' in kl.keyword_list[liste_mots[i]]:
+                is_rule = False
                 for list_comp in kl.keyword_list[liste_mots[i]]['Composite']:
                     if is_exception(sentence,list_comp,i):
-                        is_cond = True
+                        is_rule = True
                         break
-            if is_cond and 'Exception' in kl.keyword_list[liste_mots[i]]:
+            if is_rule and 'Exception' in kl.keyword_list[liste_mots[i]]:
                 for list_excep in kl.keyword_list[liste_mots[i]]['Exception']:
                     if is_exception(sentence,list_excep,i):
-                        is_cond = False
+                        is_rule = False
                         break
-            if is_cond:
+            if is_rule:
                 return True
     return False
 
-def naive_condition_extract(text):
+def keyword_extract(text):
     '''
     Entree : un texte (string).
     Sortie : une liste de couple (phrase,indice) où phrase est une phrase
@@ -158,14 +217,8 @@ def naive_condition_extract(text):
     liste_phrases = sentencify(text)
     for sentence in [sent for sent,_,_,_ in liste_phrases]:
         su = sentence.upper()
-        if is_condition(su):
+        if is_rule(su):
             indices.append(i)
         i += 1
     return [(liste_phrases[i]) for i in indices]
 
-#print(naive_condition_extract("Salut, ce projet traite de l'extraction de règles? Ce texte est un lorem ipsum. If Yes then No! iF qsldfkqsdl thEn zepfidkj. Okambonac zuitel, oksof: yaya. If not true. If Then you !"))
-#print(has_keyword('''It is Sunny, but if it rains I will take my umbrella''')) 
-#print(is_ing('''I walked there''',0))
-#print(is_condition('When I boil water, It evaporates'))
-
-'''Idées à faire, chercher des conditions sur les verbes dans les phrases pour être des règles'''
