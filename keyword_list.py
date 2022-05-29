@@ -1,13 +1,13 @@
 keyword_list = {
     'IF': {
-        'Exception':[[('Word',-1,'EVEN')],[('Word',-1,'AS')],[('Word',1,'ONLY')]]
+        'Exception':[[('Word',-1,'EVEN')],[('Word',-1,'AS')],[('Word',1,'ONLY')],[('Verb','Next','Past')]]
     },
     'UNLESS': {
     },
     'UNTIL':{
     },
     'PROVIDED':{
-        'Composite':[[('Word',-1,'THAT',)]]
+        'Composite':[[('Word',-1,'THAT')]]
     },
     'ASSUMING':{
         'Composite':[[('Word',1,'THAT')]]
@@ -15,17 +15,30 @@ keyword_list = {
     'OTHERWISE':{
     },
     'WHEN':{
-        'Exception':[[('Verb','Any','Past')],[('Verb','Any','-ing')],[('Word','Any','WILL')]]
+        'Exception':[[('Verb','Next','Past')],[('Word','Any','WILL')]]
     },
     'BECAUSE':{
+        'Exception':[[('Verb','Next','Past')]]
     },
     'SO':{
+        'Exception':[[('Word',1,'FAR')]]
     },
     'BY':{
-        'Composite':[('Verb',1,'-ing')]
+        'Composite':[[('Verb',1,'-ing')]]
     },
     'AS':{
-        'Exception':[[('Word',2,'AS')],[('Word',-2,'AS')],[('Word',1,'IF')]]
+        'Composite':[[('Upos',1,'PRON')],[('Upos',1,'PROPN')],[('Upos',1,'NOUN')]], 'Exception':[[('Word',2,'AS')],[('Word',-2,'AS')],[('Word',1,'IF')],[('Verb','Next','Past')]]
+    },
+    'CREATE':{
+    },
+    'CREATES':{
+    },
+    'DUE':{
+        'Composite':[[('Word',1,'TO')]]
+    },
+    'LEAD':{
+        'Composite':[[('Word',1,'TO')]]
+    },
+    'INSTEAD':{
     }
-
 }
