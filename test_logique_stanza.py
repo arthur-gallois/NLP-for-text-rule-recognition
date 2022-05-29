@@ -1,7 +1,7 @@
 import stanza
 from sympy import N
 from dataset_utility import *
-from naive_stanza import *
+from logique_stanza import *
 
 def nbre_mots(text):
     return len(text.split(' '))+len(text.split("’"))-1+len(text.split("'"))-1
