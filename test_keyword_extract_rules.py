@@ -1,7 +1,7 @@
 import keyword_extract_rules as ker
 import dataset_utility as du
 
-A = du.getJson('Sport_rules').get_sentences()
+A = du.getJson('dense_dataset').get_sentences()
 
 
 def test_extract(data):
