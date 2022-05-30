@@ -12,8 +12,8 @@ def is_rule(method,sentence):
     if method == 'keyword':
         return ker.is_rule(sentence)
     elif method == 'bert':
-        ###ARTHUR
-        pass
+        import classification_bertas as bert
+        return bert.is_causal([sentence])[0]        
     else:
         raise Exception('Incorrect method')
 
