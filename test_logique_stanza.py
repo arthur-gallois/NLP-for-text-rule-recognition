@@ -6,8 +6,9 @@ from logique_stanza import *
 def nbre_mots(text):
     return len(text.split(' '))+len(text.split("’"))-1+len(text.split("'"))-1
 
-text = getJson('Sport_rules')   #on charge le texte
-def test_logique(text):
+
+def test_logique(data):
+    text = getJson(data) #on charge le texte
     ratio = [0, 0, 0, 0]    #ratio_bon_cause/ratio_mauvais_cause/ratio_bon_consequence/ratio_mauvais_consequence
     n = len(text.rules)
     for k in range(n):      #on boucle sur les phrases
@@ -41,4 +42,4 @@ def test_logique(text):
     ratio[3] *= 100/n
     return ratio
 
-print(test_logique(text))
+print(test_logique('Sport_rules'))

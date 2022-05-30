@@ -1,5 +1,5 @@
 import stanza
-# stanza.download('en')
+# stanza.download('en')  #A décommenter lors de la première utilisation
 nlp = stanza.Pipeline(
     'en', processors='tokenize,mwt,pos,lemma,depparse,ner,sentiment,constituency')
 liste_mots = ['if', 'unless', 'otherwise', 'case','when']
