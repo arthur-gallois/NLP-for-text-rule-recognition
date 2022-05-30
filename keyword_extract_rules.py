@@ -1,7 +1,8 @@
 import stanza
 import nltk
 import keyword_list as kl
-nlp = stanza.Pipeline("en")
+#Uncomment if you want to use this file separatly
+# nlp = stanza.Pipeline("en") 
 
 def test_stanza(sentence,indice):
     '''
@@ -86,11 +87,12 @@ def Conjugaison(sentence,indice,time,method='Any'):
             mot = phrase[k]
             if is_commer(mot):
                 break
-            if mot['upos'] == 'VERB':
+            if mot['upos'] == 'VERB' or mot['upos'] == 'AUX':
                 if 'feats' in mot:
                     for tc in time_condition:
                         if tc in mot['feats']:
                             return True
+                    return False
                 break
     elif type(method) == int:
         if indice+method < 0 or indice+method >= len(phrase):
@@ -222,3 +224,4 @@ def keyword_extract(text):
         i += 1
     return [(liste_phrases[i]) for i in indices]
 
+print(sentencify('If yes then no. Do not worry.'))
