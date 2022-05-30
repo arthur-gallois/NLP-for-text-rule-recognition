@@ -12,17 +12,17 @@ def take_text(mot):
 
 def exception(phrase, mot):
     if mot['id'] != 1:
-        if mot['lemma'] == 'if' and phrase[mot['id']-2]['lemma'] == 'even': #even if ne correspond pas a une règle
+        if mot['lemma'] == 'if' and phrase[mot['id']-2]['lemma'] == 'even': #"even if" ne correspond pas a une règle
             print('EXCEPTION')
             return True
-        if mot['lemma'] == 'case':  #in case of  représente une règle
+        if mot['lemma'] == 'case':  #"in case of"  représente une règle
             if not(phrase[mot['id']-2]['lemma'] == 'in' and phrase[mot['id']]['lemma'] == 'of'):
                 return True
     return False
 
 def cause_consequences(text):
     doc = nlp(text)
-    for p in range(len(doc.sentences)): #on parcours les phrases du texte
+    for p in range(len(doc.sentences)): # on parcours les phrases du texte
         phrase = doc.sentences[p].to_dict()
         if phrase[-1]['text'] == '?':  # on verifie que le phrase n'est pas une question
             print('C\'est un question')
@@ -37,17 +37,17 @@ def cause_consequences(text):
                 if exception(phrase, mot):
                     pass
                 else:            
-                    action = phrase[h1-1]   #action est le mot principal de la phrase
+                    action = phrase[h1-1]   # action est le mot principal de la phrase
                     h2 = action['head']
-                    if h2 != 0:             #si on a une conséquence
-                        consequence = phrase[h2-1]['text']  #consequence est un mot important de la onséquence
+                    if h2 != 0:             # si on a une conséquence
+                        consequence = phrase[h2-1]['text']  #la variable consequence est un mot important de la conséquence de la phrase
                         consequences.append((consequence, h2))
                         consequences_id.append(h2)
                     causes.append((action['text'], h1))
                     causes_id.append(h1)
             if len(causes) != 0:    #si on a repéré une cause
                 boole=True
-                while boole:#tant que l'on rajoute des élements on continue
+                while boole:    #tant que l'on rajoute des élements on continue
                     boole=False
                     for mot in phrase:
                         h = mot['head']
@@ -62,6 +62,6 @@ def cause_consequences(text):
                             bool=True
                 causes.sort(key=take_id)    #on trie la cause pour retrouver l'ordre présent dans la phrase
                 consequences.sort(key=take_id)  #de même
-                causes = list(map(take_text, causes)) 
+                causes = list(map(take_text, causes)) #on retire les indices des mots(cela ne nous interesse pas)
                 consequences = list(map(take_text, consequences))
                 return causes, consequences
