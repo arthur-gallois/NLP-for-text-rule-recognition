@@ -4,4 +4,5 @@ Le but de ce projet est de détecter des "règles" dans un texte écrit en Angla
 
 Le projet est programmé en python
 
-test de push sur la branch Eliott
+Lien du notebook d'entrainement du modèle logistique:
+https://www.kaggle.com/arthurgallois/bert-p-le-projet
