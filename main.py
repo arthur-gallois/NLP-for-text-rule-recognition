@@ -32,4 +32,5 @@ def cause_consequence(method,sentence):
     '''
     if method=='logic':
         return lg.cause_consequences(sentence)
-    return sp.list_cause_consequence(sentence)
+    else:
+        return sp.list_cause_consequence(sentence)
