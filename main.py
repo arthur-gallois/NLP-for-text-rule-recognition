@@ -1,5 +1,5 @@
 import keyword_extract_rules as ker
-import naive_stanza as ns
+import logique_stanza as lg
 import stanza_parseTree as sp
 import stanza
 nlp = stanza.Pipeline("en")
@@ -30,4 +30,6 @@ def cause_consequence(method,sentence):
     method: 'logic' or 'syntaxic'
     sentence: a string
     '''
-
+    if method=='logic':
+        return lg.cause_consequences(sentence)
+    return sp.list_cause_consequence(sentence)
