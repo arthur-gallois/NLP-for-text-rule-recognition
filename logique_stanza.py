@@ -1,7 +1,7 @@
 import stanza
 # stanza.download('en')  #A décommenter lors de la première utilisation
-nlp = stanza.Pipeline(
-    'en', processors='tokenize,mwt,pos,lemma,depparse,ner,sentiment,constituency')
+#nlp = stanza.Pipeline(
+#    'en', processors='tokenize,mwt,pos,lemma,depparse,ner,sentiment,constituency') #A décommenter si utilisé seul
 liste_mots = ['if', 'unless', 'otherwise', 'case','when']
 
 def take_id(mot):

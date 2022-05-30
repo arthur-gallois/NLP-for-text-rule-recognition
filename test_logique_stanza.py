@@ -42,4 +42,4 @@ def test_logique(data):
     ratio[3] *= 100/n
     return ratio
 
-print(test_logique('Sport_rules'))
+print(test_logique('Dense_Dataset'))
